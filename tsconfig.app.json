@@ -42,6 +42,9 @@
       "@api/*": [
         "src/api/*"
       ],
+      "@firebaseService/*": [
+        "src/service/firebase/*"
+      ],
     },
     /* Linting */
     "strict": true,

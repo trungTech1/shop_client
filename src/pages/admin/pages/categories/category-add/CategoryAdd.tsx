@@ -1,38 +1,43 @@
 import React from 'react';
 import './addCategory.scss';
 import { useTranslation } from 'react-i18next';
-import api from '@/api';
 import { useNavigate } from 'react-router-dom';
+import { fireBaseFn } from '@firebaseService/firebase';
+import api from '@/api';
 import { useDispatch } from 'react-redux';
-import { categoryActions } from '@/store/slices/category.slide';
-import { fireBaseFn } from '@/firebase/firebase';
+import { categoryActions } from '@/store/slices/category.slice';
+import { Modal } from 'antd';
 
 
-const AddCategory: React.FC = () => {
+const AddCategory = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const newCategory = {
-      category_name: (event.target as any).category_name.value,
-      image: await fireBaseFn.uploadToStorage((event.target as any).image.files[0]),
+        const newCategory = {
+      name: (event.target as any).category_name.value,
+      iconUrl: await fireBaseFn.uploadToStorage((event.target as any).image.files[0]),
     }
 
-    console.log("đã vào", newCategory)
 
-    api.category.addCategory(
+    api.categories.add(
       newCategory
     ).then((res) => {
-       alert(res.data.message);
-       dispatch(categoryActions.addCategory(res.data.data));
-       navigate(-1);
+       Modal.success({content: t('addCategorySuccess'),
+        onOk: () => {
+          dispatch(categoryActions.addCategory(res.data))
+          navigate(-1);
+        }
+       });
     }).catch(() => {
       alert(t('addCategoryFailed'));
     });
   };
+
+
 
   return (
     <div className="add-category">

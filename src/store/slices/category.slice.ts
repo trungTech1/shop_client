@@ -19,7 +19,14 @@ const initialState: CategoryState = {
 const categorySlice = createSlice({
   name: "category",
   initialState,
-  reducers: {},
+  reducers: {
+    addCategory : (state, action) => {
+      state.data?.push(action.payload);
+    },
+    deleteCategory: (state, action) => {
+      state.data = state.data?.filter((category) => category.id !== action.payload) || null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fecthCategories.fulfilled, (state, action) => {
       state.data = action.payload;

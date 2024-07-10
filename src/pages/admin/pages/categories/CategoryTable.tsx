@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import "./CategoryTable.scss";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
+import api from "@/api";
+import { Modal } from "antd";
+import { categoryActions } from "@/store/slices/category.slice";
+
 
 const CategoryTable: React.FC = () => {
   const { t } = useTranslation();
   const categoryStore = useSelector ((state: RootState) => state.category);
+  const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await api.categories.delete(id);
+      Modal.success({
+        content: t("deleteCategorySuccess"),
+        onOk: () => {
+          dispatch(categoryActions.deleteCategory(id));
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="category-table-container">
@@ -37,24 +60,29 @@ const CategoryTable: React.FC = () => {
             <th>{t("id")}</th>
             <th>{t("name")}</th>
             <th>{t("image")}</th>
-            <th>{t("isDeleted")}</th>
+            <th>{t("status")}</th>
             <th colSpan={2}>{t("action")}</th>
           </tr>
         </thead>
         <tbody>
-          {categoryStore.data?.map((category) => (
+          {categoryStore.data?.map((category,index) => (
             <tr key={category.id}>
-              <td>{category.id}</td>
+              <td>{index + 1}</td>
               <td>{category.name}</td>
               <td>
                 <img src={category.iconUrl} alt={category.name} />
               </td>
-              <td>{category.status ? "Deleted" : "Active"}</td>
+              <td>{category.status ? "Active" : "NoAcative"}</td>
               <td>
                 <Link to={`edit/${category.id}`}>{t("edit")}</Link>
               </td>
               <td>
-                <button>{t("delete")}</button>
+                <button
+                onClick={() => {
+                  handleDelete(category.id);
+                }  
+          }
+                >{t("delete")}</button>
               </td>
             </tr>
           ))}
