@@ -8,7 +8,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAh7wxm9TVMVatDqgwp22L9COqck3WSzBQ",
   authDomain: "shopinufb.firebaseapp.com",
   projectId: "shopinufb",
-  storageBucket: "shopinufb.appspot.com",git add
+  storageBucket: "shopinufb.appspot.com",
   messagingSenderId: "1043664494543",
   appId: "1:1043664494543:web:09b05cc00e8cc912517cba",
   measurementId: "G-FBEL3HSXWJ",
