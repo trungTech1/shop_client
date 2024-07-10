@@ -1,0 +1,101 @@
+.edit-product {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  
+    .title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  
+    .product-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  
+      .form-group {
+        margin-bottom: 15px;
+        width: 100%;
+        max-width: 400px;
+  
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+  
+        input[type="text"],
+        input[type="file"],
+        input[type="number"],
+        select {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+  
+        input[type="file"] {
+          padding: 3px;
+        }
+  
+        .product-image {
+          margin-top: 10px;
+          max-width: 100px;
+          height: auto;
+        }
+      }
+  
+      .submit-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+  .images-container {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: nowrap; /* Ngăn chặn việc chuyển xuống hàng mới */
+    gap: 15px; /* Khoảng cách giữa các hình ảnh */
+    overflow-x: auto; /* Hiển thị thanh cuộn ngang nếu cần */
+    white-space: nowrap; /* Đảm bảo tất cả các hình ảnh nằm trên một hàng */
+  }
+  
+  .images-container img {
+    width: 100px; /* Đặt chiều rộng cố định cho hình ảnh */
+    height: auto;
+     /* Tự động điều chỉnh chiều cao để giữ tỉ lệ */
+  }
+  .image-item {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .remove-image-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 0 0 0 5px; /* Làm tròn góc dưới bên trái */
+    font-size: 12px; /* Điều chỉnh kích thước font */
+    font-weight: bold; /* Làm đậm chữ */
+    opacity: 0.8; /* Điều chỉnh độ trong suốt */
+    transition: opacity 0.3s, background-color 0.3s; /* Hiệu ứng chuyển đổi mượt mà */
+  
+    &:hover {
+      opacity: 1; /* Làm cho nút trở nên không trong suốt khi di chuột qua */
+      background-color: darkred; /* Thay đổi màu nền khi di chuột qua */
+    }
+  }
