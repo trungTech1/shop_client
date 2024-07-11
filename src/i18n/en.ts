@@ -1,3 +1,5 @@
+import { register } from "module";
+
 export default {
     translation: {
         hello: "Hello",
@@ -65,9 +67,60 @@ export default {
         address: "Address",
         unlock: "Unlock",
         lock: "Lock",
-
-
-
-
-    }
+        login: "Login",
+        forgotPassword: "Forgot Password?",
+        or: "Or",
+        register: "Register",
+        registerAccount: "Register Account",
+        firstandlastname: "Full Name",
+        registerContent1: "By selecting Continue; you agree with",
+        registerContent2: "Conditions apply",
+        registerContent3: "of winmart.vn and become a Win Member.",
+        continue: "CONTINUE",
+        login1: "LOGIN",
+        login2: "Email/Username/Phone",
+        register1: "REGISTER",
+        placeholderSearch: "FreeShip 1,5$ for all products",
+        categoryProduct: "Category Product",
+        beer: "Beer",
+        milk: "Milk",
+        food: "Food",
+        soda: "Soda",
+        electricAppliances: "Electric Appliances",
+        purchaseHistory: "Purchase History",
+        newWinmart: "News Winmart",
+        shoppingAdvice: "Shopping Advice",
+        delivery1: "Delivery",
+        footerContext1: "WinCommerce General Trading Services Joint Stock Company",
+        footerContext2: "Business code: 0104918404 First registration on September 20",
+        footerContext3: "2010, 48th change registration, June 30, 2023",
+        aboutUs: "About Us",
+        introWinmart: "introduce about Winmart",
+        storeList: "Store List",
+        privacyPolicy: "Privacy Policy",
+        qualityManagement: "Quality Management",
+        tradingTermsAndConditions: "Trading Terms and Conditions",
+        customerSupport: "Customer Support",
+        customerSupportCenter: "Customer Support Center",
+        deliveryPolicy: "Delivery Policy",
+        paymentPolicy: "Payment Policy",
+        returnPolicy: "Return Policy",
+        evaluateAndComment: "Evaluate and Comment",
+        listOfWinners: "List of Winners",
+        customerCare: "Customer Care",
+        buyOnline: "Buy online: 0904533965",
+        connectWithUs: "Connect with us",
+        HanoiTransactionAddress: "Hanoi Transaction Address",
+        WinCommerceGeneralTradingServicesJointStockCompany: "WinCommerce General Trading Services Joint Stock Company",
+        footerTest1: "6th Floor, International Center Building, 17 Ngo Quyen, Trang Ward",
+        footerTest2: "Tien, Hoan Kiem District, Hanoi City",
+        footerTest3: "Headquarters:",
+        footerTest4: "WinCommerce General Trading Services Joint Stock Company",
+        footerTest5: "No. 23 Le Duan, Ben Nghe Ward, District 1, Ho Chi Minh City,",
+        vn: "Vietnam",
+        footerTest6: "Transaction address in Ho Chi Minh City:",
+        footerTest7: "WinCommerce General Trading Services Joint Stock Company",
+        footerTest8: "12th Floor, Mplaza SaiGon Building, 39 Le Duan, Ben Nghe Ward,",
+        footerTest9: "District 1, Ho Chi Minh City, Vietnam"
+    }   
 }

@@ -2,7 +2,7 @@ import './404.scss'
 
 export default function NotFound404() {
     return (
-        <>
+        <div className='page_error'>
             <div className="moon" />
             <div className="moon__crater moon__crater1" />
             <div className="moon__crater moon__crater2" />
@@ -46,6 +46,7 @@ export default function NotFound404() {
                     <div className="astronaut__head-visor-flare2" />
                 </div>
             </div>
-        </>
+        </div>
+
     )
 }
