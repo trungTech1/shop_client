@@ -1,77 +1,28 @@
-import React, { ChangeEvent, FormEvent } from "react";
-import axios from "axios";
+
 import "../authen/register.scss";
-import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { Link,  } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+
 import TextField from "@mui/material/TextField";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
+import api from "@/api";
 
 const Register = () => {
   const { t } = useTranslation();
-  const [name, setName] = React.useState<string>("");
-  const [email, setEmail] = React.useState<string>("");
-  const [password, setPassword] = React.useState<string>("");
-  const [code, setCode] = React.useState<string>("");
-  const [emailError, setEmailError] = React.useState<string>("");
-  const [passwordError, setPasswordError] = React.useState<string>("");
-  const navigate = useNavigate();
-
-  const handleInputName = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const handleInputEmail = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handleInputPassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleInputCode = (e: ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value);
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = {
-      name: name,
-      email: email,
-      password: password,
-      code: code,
-      cart: [],
-    };
-
-    try {
-      const users = await axios.get("http://localhost:3001/authen");
-
-      const emailExists = users.data.some((user: any) => user.email === email);
-
-      if (emailExists) {
-        setEmailError("Email đã tồn tại");
-        setPasswordError("Mật khẩu phải có ít nhất 6 ký tự");
-        toast.error("Đăng ký thất bại");
-        return;
-      }
-
-      await axios.post("http://localhost:3001/authen", data);
-      console.log("Đăng ký thành công");
-      (e.target as HTMLFormElement).reset();
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-      toast.success("Đăng ký thành công");
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setEmailError(err.response?.data?.data?.email || "");
-        setPasswordError(err.response?.data?.data?.password || "");
-      }
-      console.log(err);
-      toast.error("Đăng ký thất bại");
-    }
-  };
+  
+  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) =>{
+        e.preventDefault();
+        const data ={
+          fullname : ( e.target as any).fullname.value,
+          username : ( e.target as any).username.value,
+          email : ( e.target as any).email.value,
+          password : ( e.target as any).password.value,
+          phone : ( e.target as any).phone.value,
+        }
+        await api.user.create(data)
+  }
 
   return (
     <div className="formRegister">
@@ -89,13 +40,17 @@ const Register = () => {
         </Link>
       </div>
       <h1 className="titleRegister">{t("registerAccount")}</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e)=> {
+        handleSubmit(e)
+      }}>
         <TextField
           autoFocus
           id="fullname"
           label={t("firstandlastname")}
           variant="outlined"
-          onChange={handleInputName}
+
+          name="fullname"
+
           type="text"
           placeholder={t("firstandlastname")}
           InputLabelProps={{
@@ -108,7 +63,7 @@ const Register = () => {
           id="username"
           label={t("userName")}
           variant="outlined"
-          onChange={handleInputName}
+          name="username"
           type="text"
           placeholder={t("userName")}
           InputLabelProps={{
@@ -121,18 +76,19 @@ const Register = () => {
           id="email"
           label="Email"
           variant="outlined"
-          onChange={handleInputEmail}
           placeholder="Email"
           type="email"
           InputLabelProps={{
             style: { color: "black" },
           }}
         />
-        <p className="error">{emailError}</p>
+        <p className="error">
+          {/* lỗi */}
+        </p>
         <TextField
           inputProps={{ minLength: 6 }}
           id="password"
-          onChange={handleInputPassword}
+          name="password"
           label={t("password")}
           variant="outlined"
           placeholder={t("password")}
@@ -141,12 +97,13 @@ const Register = () => {
             style: { color: "black" },
           }}
         />
-        <p className="error">{passwordError}</p>
+        <p className="error"></p>
         <TextField
           id="phone"
           label={t("phone")}
           variant="outlined"
-          onChange={handleInputCode}
+
+          name="phone"
           placeholder={t("phone")}
           type="text"
           InputLabelProps={{
