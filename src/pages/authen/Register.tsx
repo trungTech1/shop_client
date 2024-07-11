@@ -1,6 +1,8 @@
+
 import "../authen/register.scss";
 import { Link,  } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+
 import TextField from "@mui/material/TextField";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";
@@ -46,7 +48,9 @@ const Register = () => {
           id="fullname"
           label={t("firstandlastname")}
           variant="outlined"
+
           name="fullname"
+
           type="text"
           placeholder={t("firstandlastname")}
           InputLabelProps={{
@@ -98,6 +102,7 @@ const Register = () => {
           id="phone"
           label={t("phone")}
           variant="outlined"
+
           name="phone"
           placeholder={t("phone")}
           type="text"
