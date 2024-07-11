@@ -26,14 +26,6 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  function createToken(data: any): string {
-    const dataJsonStr = JSON.stringify({ data, privateKey: "NDK" });
-    let hashStr = ``;
-    for (const i in dataJsonStr) {
-      hashStr += dataJsonStr[i].charCodeAt(0) * 3 + "'";
-    }
-    return hashStr;
-  }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

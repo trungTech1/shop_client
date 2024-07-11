@@ -12,6 +12,5 @@ export type RootState = ReturnType<typeof rootReducer>;
 const Store = configureStore({
     reducer: rootReducer,
 });
-
-Store.dispatch(categoryActions.fecthCategories());
+Store.dispatch(categoryActions.fecthCategories( {page: 0, pageSize: 10}));
 export default Store;

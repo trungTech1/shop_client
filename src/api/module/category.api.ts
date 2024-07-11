@@ -2,9 +2,18 @@ import axios from "axios";
 
 
 const url = import.meta.env.VITE_SEVER_URL
+const prefix = "categories";
 const categoryApi = {
-  getAll: () => {
-    return axios.get(`${url}/categories`);
+  getCategories: async (
+    page: number,
+    pageSize: number,
+    searchTerm?: string
+  ) => {
+    let getUrl = `${url}/${prefix}?page=${page}&size=${pageSize}`;
+    if (searchTerm) {
+      getUrl = `${url}/${prefix}/search?page=${page}&size=${pageSize}&search=${encodeURIComponent(searchTerm)}`;
+    }
+    return await axios.get(getUrl);
   },
   add: (data: any) => {
     return axios.post(`${url}/categories`, data);

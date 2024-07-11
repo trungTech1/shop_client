@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CategoryTable.scss";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -31,7 +31,36 @@ const CategoryTable: React.FC = () => {
       console.log(error);
     }
   };
+  const loadCategories = async () => {
+    const data = await api.categories.getCategories(
+      currentPage,
+      pageSize,
+      searchTerm
+    );
+    dispatch(categoryActions.addCategory(data.data));
+    setTotalPages(data.data.totalPages);
+  };
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await api.categories.getCategories(currentPage, pageSize);
+      dispatch(categoryActions.addCategory(data.data.content));
+      setTotalPages(data.data.totalPages);
+    };
+    loadCategories();
+  }, [currentPage, pageSize, dispatch]);
 
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+    return pageNumbers;
+  };
+
+  const handleSearch = () => {
+    setCurrentPage(0);
+    loadCategories();
+  };
   return (
     <div className="category-table-container">
       <div className="header">
@@ -45,9 +74,18 @@ const CategoryTable: React.FC = () => {
           <div className="search-box">
               <input
                 type="text"
-                placeholder={t("search")}
+                placeholder={t("placeholderSearchCategory")}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault(); // Ngăn chặn hành vi mặc định của phím Enter
+                    handleSearch();
+                  }
+                }
+                }
               />
-            <button className="search-button" >
+            <button className="search-button" onClick={handleSearch}>
               {t("search")}
             </button>
           </div>
@@ -65,43 +103,72 @@ const CategoryTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {categoryStore.data?.map((category,index) => (
-            <tr key={category.id}>
-              <td>{index + 1}</td>
-              <td>{category.name}</td>
-              <td>
-                <img src={category.iconUrl} alt={category.name} />
-              </td>
-              <td>{category.status ? "Active" : "NoAcative"}</td>
-              <td>
-                <Link to={`edit/${category.id}`}>{t("edit")}</Link>
-              </td>
-              <td>
-                <button
-                onClick={() => {
-                  handleDelete(category.id);
-                }  
+          {
+            Array.isArray(categoryStore.data) && categoryStore.data.length > 0 ?(
+              categoryStore.data?.map((category,index) => (
+                <tr key={category.id}>
+                  <td>{index + 1}</td>
+                  <td>{category.name}</td>
+                  <td>
+                    <img src={category.iconUrl} alt={category.name} />
+                  </td>
+                  <td>{category.status ? "Active" : "NoAcative"}</td>
+                  <td>
+                    <Link to={`edit/${category.id}`}>{t("edit")}</Link>
+                  </td>
+                  <td>
+                    <button
+                    onClick={() => {
+                      handleDelete(category.id);
+                    }  
+              }
+                    >{t("delete")}</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={10}>{t("noData")}</td>
+              </tr>
+            )
           }
-                >{t("delete")}</button>
-              </td>
-            </tr>
-          ))}
+         
         </tbody>
       </table>
       </div>
       <div className="pagination">
         <button
- 
+          onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+          disabled={currentPage === 0}
         >
           Previous
         </button>
+        {getPageNumbers().map((number) => (
+          <button
+            key={number}
+            className={`pagination-button ${
+              currentPage === number - 1 ? "active" : ""
+            }`}
+            onClick={() => setCurrentPage(number - 1)}
+          >
+            {number}
+          </button>
+        ))}
         <button
-        
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))
+          }
+          disabled={currentPage === totalPages - 1}
         >
           Next
         </button>
         <select
           className="select-page-size"
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+            setCurrentPage(0);
+          }}
         >
           <option value="10">10 per page</option>
           <option value="20">20 per page</option>

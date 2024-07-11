@@ -9,7 +9,7 @@ const RouterSetup = () =>  {
       <Routes>
         <Route path='/' element={lazyFnDelay(() => import('@pages/home/Home'))}>
           <Route index element={lazyFnDelay(() => import('@pages/home/components/Homepage'))}></Route>
-          <Route path='/cart' element={lazyFnDelay(() => import('@pages/cart/Cart'))}></Route>
+          <Route path='cart' element={lazyFnDelay(() => import('@pages/cart/Cart'))}></Route>
           <Route path='/checkout' element={lazyFnDelay(() => import('@pages/checkout/Checkout'))}></Route>
         </Route>
         <Route path='/register' element={lazyFnDelay(() => import('@pages/authen/Register'))}></Route>

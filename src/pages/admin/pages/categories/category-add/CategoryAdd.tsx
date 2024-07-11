@@ -16,14 +16,12 @@ const AddCategory = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
         const newCategory = {
       name: (event.target as any).category_name.value,
       iconUrl: await fireBaseFn.uploadToStorage((event.target as any).image.files[0]),
     }
-
-
-    api.categories.add(
+    console.log("newCategory", newCategory)
+   await api.categories.add(
       newCategory
     ).then((res) => {
        Modal.success({content: t('addCategorySuccess'),
