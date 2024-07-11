@@ -121,6 +121,14 @@ export default {
         footerTest6: "Địa chỉ giao dịch tại TP.HCM:",
         footerTest7: "Công Ty Cổ Phần Dịch Vụ Thương Mại Tổng Hợp WinCommerce",
         footerTest8: "Tầng 12, Tòa nhà Mplaza SaiGon, số 39 Lê Duẩn, Phường Bến Nghé,",
-        footerTest9: "Quận 1, TP Hồ Chí Minh, Việt Nam"
+        footerTest9: "Quận 1, TP Hồ Chí Minh, Việt Nam",
+        seeMore: "Xem thêm",
+        close: "Đóng",
+        bisSale: "Siêu khuyến mãi",
+        cart: "Giỏ hàng",
+        userProfile: "Thông tin người dùng",
+        myOrder: "Đơn hàng của tôi",
+        logOut: "Đăng xuất",
+        member: "Hội viên",
     }
 }

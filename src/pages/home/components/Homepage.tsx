@@ -3,8 +3,10 @@ import AdComponent from './ad/Ad'
 import CountdownTimer from '@/components/time/CountdownTimer'
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { useTranslation } from 'react-i18next';
 
 export default function Homepage() {
+  const {t} = useTranslation();
   return (
     <div className="home_page_body">
         <Boottrap />
@@ -12,7 +14,7 @@ export default function Homepage() {
         
         <div className="time_container">
           <div className="timer">
-            <h1>Siêu khuyến mãi</h1>
+            <h1>{t("bisSale")}</h1>
             <CountdownTimer hours={10} minutes={0} seconds={0} />
           </div>
         </div>

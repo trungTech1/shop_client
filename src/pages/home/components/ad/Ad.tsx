@@ -1,8 +1,10 @@
 import "./ad.scss";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function AdComponent() {
+  const {t} = useTranslation();
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
 
@@ -35,10 +37,10 @@ function AdComponent() {
         </div>
         <div>
           <button className="close-btn" onClick={() => navigate("/cart")}>
-            XEM THÊM
+            {t("seeMore")}
           </button>
           <button className="close-btn" onClick={onClose}>
-            ĐÓNG
+            {t("close")}
           </button>
         </div>
       </div>
