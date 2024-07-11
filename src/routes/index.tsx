@@ -11,6 +11,7 @@ const RouterSetup = () =>  {
           <Route index element={lazyFnDelay(() => import('@pages/home/components/Homepage'))}></Route>
           <Route path='cart' element={lazyFnDelay(() => import('@pages/cart/Cart'))}></Route>
           <Route path='/checkout' element={lazyFnDelay(() => import('@pages/checkout/Checkout'))}></Route>
+          <Route path='/productDetail' element={lazyFnDelay(() => import('@pages/product-detail/ProductDetail'))}></Route>
         </Route>
         <Route path='/register' element={lazyFnDelay(() => import('@pages/authen/Register'))}></Route>
         <Route path='/login' element={lazyFnDelay(() => import('@pages/authen/LogIn'))}></Route>

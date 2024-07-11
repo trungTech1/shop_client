@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './cart.scss';
 import ReplyIcon from '@mui/icons-material/Reply';
+import { useTranslation } from 'react-i18next';
 
 interface CartItem {
     id: number;
@@ -11,6 +12,7 @@ interface CartItem {
 }
 
 const Cart: React.FC = () => {
+    const {t} = useTranslation();
     const [cartItems, setCartItems] = useState<CartItem[]>([
         {
             id: 1,
