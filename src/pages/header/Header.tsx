@@ -52,23 +52,22 @@ const Header = (props: any) => {
             <Link to="/cart" className="header-above-right-cart">
               {" "}
               <AddShoppingCartIcon className="header-above-right-cart-icon" />
-              {/* <span>Giỏ hàng {user?.cart.length}</span> */}
+              <span>{t("cart")}</span> <span>{999}</span>
             </Link>
             <div className="header-above-right-authen">
-              {/* {token ? (
+              {false ? (
                 <div className="authenContainer">
                   <div className="authenInfo">
-                    Chào bạn, <br />
+                    {t("hello")}, <br />
                     {
-                      decodeToken(localStorage.getItem("token") || "").data
-                        .email
+                     "Anh Trung Lớn"
                     }
                   </div>
                   <div className="dropDownAuthen">
-                    <div className="authenItem">Thông tin cá nhân</div>
-                    <div className="authenItem">Đơn hàng của tôi</div>
-                    <div className="authenItem" onClick={handleLogout}>
-                      Đăng xuất
+                    <div className="authenItem">{t("userProfile")}</div>
+                    <div className="authenItem">{t("myOrder")}</div>
+                    <div className="authenItem" >
+                      {t("logOut")}
                     </div>
                   </div>
                 </div>
@@ -76,10 +75,10 @@ const Header = (props: any) => {
                 <>
                   <Link to="/login" className="header-authen">
                     <AccountCircleIcon className="header-authen-icon" />{" "}
-                    <span className="header-authen-text">Hội viên</span>
+                    <span className="header-authen-text">{t("member")}</span>
                   </Link>
                 </>
-              )} */}
+              )}
             </div>
           </div>
         </div>

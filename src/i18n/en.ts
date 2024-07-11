@@ -121,6 +121,14 @@ export default {
         footerTest6: "Transaction address in Ho Chi Minh City:",
         footerTest7: "WinCommerce General Trading Services Joint Stock Company",
         footerTest8: "12th Floor, Mplaza SaiGon Building, 39 Le Duan, Ben Nghe Ward,",
-        footerTest9: "District 1, Ho Chi Minh City, Vietnam"
+        footerTest9: "District 1, Ho Chi Minh City, Vietnam",
+        seeMore: "See More",
+        close: "Close",
+        bisSale: "Big Sales",
+        cart: "Cart",
+        userProfile: "User Profile",
+        myOrder: "My Order",
+        logOut: "Log Out",
+        member: "Member",
     }   
 }
