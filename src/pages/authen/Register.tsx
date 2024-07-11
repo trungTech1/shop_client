@@ -1,6 +1,5 @@
-
 import "../authen/register.scss";
-import { Link,  } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import TextField from "@mui/material/TextField";
@@ -8,21 +7,115 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import api from "@/api";
+import { User } from "@/api/module/user.api";
+import { Modal } from "antd";
+import { useState } from "react";
 
+interface ErrorObject {
+  message: {
+    email?: string;
+    fullName?: string;
+    password?: string;
+    phone?: string;
+    username?: string;
+  };
+  code?: string;
+  error?: string; // Add other fields as necessary
+}
 const Register = () => {
   const { t } = useTranslation();
-  
-  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) =>{
-        e.preventDefault();
-        const data ={
-          fullname : ( e.target as any).fullname.value,
-          username : ( e.target as any).username.value,
-          email : ( e.target as any).email.value,
-          password : ( e.target as any).password.value,
-          phone : ( e.target as any).phone.value,
+  const [error, setError] = useState<ErrorObject | null>(null);
+  const [validationErrors, setValidationErrors] = useState<ErrorObject>({
+    message: {},
+  });
+  const validateForm = (data: User) => {
+    const errors: ErrorObject = { message: {} };
+
+    if (!data.fullName.trim()) {
+      errors.message.fullName = t("fullName không được để trống");
+    } else if (data.fullName.length < 6) {
+      errors.message.fullName = t("fullName phải có ít nhất 6 ký tự");
+    }
+
+    if (!data.username.trim()) {
+      errors.message.username = t("username không được để trống");
+    } else if (data.username.length < 6) {
+      errors.message.username = t("username phải có ít nhất 6 ký tự");
+    }
+
+    if (!data.email.trim()) {
+      errors.message.email = t("email không được để trống");
+    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+      errors.message.email = t("email không hợp lệ");
+    }
+
+    if (!data.password.trim()) {
+      errors.message.password = t("password không được để trống");
+    } else if (data.password.length < 6) {
+      errors.message.password = t("password phải có ít nhất 6 ký tự");
+    }
+
+    if (!data.phone.trim()) {
+      errors.message.phone = t("phone không được để trống");
+    } else if (!/^\d{10}$/.test(data.phone)) {
+      errors.message.phone = t("phone không hợp lệ");
+    }
+
+    return errors;
+  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data: User = {
+      fullName: (e.target as any).fullname.value,
+      username: (e.target as any).username.value,
+      email: (e.target as any).email.value,
+      password: (e.target as any).password.value,
+      phone: (e.target as any).phone.value,
+      AvatarUrl:
+        "https://firebasestorage.googleapis.com/v0/b/vinmartshop-f01e1.appspot.com/o/no-avatar.webp?alt=media&token=260a5dd4-33cf-4a11-8a50-44f5fe457d9f",
+    };
+    const errors = validateForm(data);
+
+    if (Object.keys(errors.message).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+    await api.user
+      .create(data)
+      .then((res) => {
+        Modal.success({
+          content: res.data,
+          onOk: () => {
+            window.location.href = "/login";
+          },
+        });
+      })
+      .catch((err) => {
+        if (err.response) {
+          setError(err.response.data);
         }
-        await api.user.create(data)
-  }
+      });
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (error) {
+      setError({
+        ...error,
+        message: {
+          ...error.message,
+          [e.target.name]: undefined,
+        },
+      });
+    }
+    if (validationErrors.message) {
+      setValidationErrors({
+        ...validationErrors,
+        message: {
+          ...validationErrors.message,
+          [e.target.name]: undefined,
+        },
+      });
+    }
+  };
 
   return (
     <div className="formRegister">
@@ -40,77 +133,113 @@ const Register = () => {
         </Link>
       </div>
       <h1 className="titleRegister">{t("registerAccount")}</h1>
-      <form onSubmit={(e)=> {
-        handleSubmit(e)
-      }}>
-        <TextField
-          autoFocus
-          id="fullname"
-          label={t("firstandlastname")}
-          variant="outlined"
+      <form
+        onSubmit={(e) => {
+          handleSubmit(e);
+        }}
+      >
+        <div className="input-container">
+          <TextField
+            autoFocus
+            id="fullname"
+            label={t("firstandlastname")}
+            variant="outlined"
+            name="fullname"
+            type="text"
+            placeholder={t("firstandlastname")}
+            InputLabelProps={{
+              style: { color: "black" },
+            }}
+            onChange={handleChange}
+            // style={{ marginBottom: "20px" }}
+          />
+          {(validationErrors.message.fullName || error?.message?.fullName) && (
+            <p className="error-message">
+              {validationErrors.message.fullName || error?.message?.fullName}
+            </p>
+          )}
+        </div>
+        <div className="input-container">
+          <TextField
+            id="username"
+            label={t("userName")}
+            variant="outlined"
+            name="username"
+            type="text"
+            placeholder={t("userName")}
+            onChange={handleChange}
+            InputLabelProps={{
+              style: { color: "black" },
+            }}
+          />
+          {(validationErrors.message.username || error?.message?.username) && (
+            <p className="error-message">
+              {validationErrors.message.username || error?.message?.username}
+            </p>
+          )}
+        </div>
 
-          name="fullname"
+        <div className="input-container">
+          <TextField
+            id="email"
+            label="Email"
+            variant="outlined"
+            placeholder="Email"
+            type="email"
+            name="email"
+            onChange={handleChange}
+            InputLabelProps={{
+              style: { color: "black" },
+            }}
+          />
+          {(validationErrors.message.email || error?.message?.email) && (
+            <p className="error-message">
+              {validationErrors.message.email || error?.message?.email}
+            </p>
+          )}
+        </div>
+        <div className="input-container">
+          <TextField
+            inputProps={{ minLength: 6 }}
+            id="password"
+            name="password"
+            label={t("password")}
+            variant="outlined"
+            placeholder={t("password")}
+            type="password"
+            onChange={handleChange}
+            InputLabelProps={{
+              style: { color: "black" },
+            }}
+            // style={{ marginBottom: "40px" }}
+          />
+          {(validationErrors.message.password || error?.message?.password) && (
+            <p className="error-message">
+              {validationErrors.message.password || error?.message?.password}
+            </p>
+          )}
+        </div>
 
-          type="text"
-          placeholder={t("firstandlastname")}
-          InputLabelProps={{
-            style: { color: "black" },
-          }}
-          style={{ marginBottom: "20px" }}
-        />
-
-        <TextField
-          id="username"
-          label={t("userName")}
-          variant="outlined"
-          name="username"
-          type="text"
-          placeholder={t("userName")}
-          InputLabelProps={{
-            style: { color: "black" },
-          }}
-          style={{ marginBottom: "20px" }}
-        />
-
-        <TextField
-          id="email"
-          label="Email"
-          variant="outlined"
-          placeholder="Email"
-          type="email"
-          InputLabelProps={{
-            style: { color: "black" },
-          }}
-        />
-        <p className="error">
-          {/* lỗi */}
-        </p>
-        <TextField
-          inputProps={{ minLength: 6 }}
-          id="password"
-          name="password"
-          label={t("password")}
-          variant="outlined"
-          placeholder={t("password")}
-          type="password"
-          InputLabelProps={{
-            style: { color: "black" },
-          }}
-        />
-        <p className="error"></p>
-        <TextField
-          id="phone"
-          label={t("phone")}
-          variant="outlined"
-
-          name="phone"
-          placeholder={t("phone")}
-          type="text"
-          InputLabelProps={{
-            style: { color: "black" },
-          }}
-        />
-
+        <div className="input-container">
+          <TextField
+            id="phone"
+            label={t("phone")}
+            variant="outlined"
+            name="phone"
+            placeholder={t("phone")}
+            type="text"
+            onChange={handleChange}
+            InputLabelProps={{
+              style: { color: "black" },
+            }}
+            style={{ marginBottom: "40px" }}
+          />
+          {(validationErrors.message.phone || error?.message?.phone) && (
+            <p className="error-message">
+              {validationErrors.message.phone || error?.message?.phone}
+            </p>
+          )}
+        </div>
         <div className="register-tc">
           <span>{t("registerContent1")}</span>
           <Link to="/" className="register-linkTc">

@@ -111,3 +111,36 @@ input {
   text-align: center;
   padding-top: 20px;
 }
+.input-container {
+  position: relative;
+  margin-bottom: 30px;
+
+  .MuiTextField-root {
+    width: 100%;
+  }
+
+  .error-message {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    color: red;
+    font-size: 12px;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    &:not(:empty) {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.formRegister {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
