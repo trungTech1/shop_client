@@ -15,7 +15,7 @@ export interface UserState {
 }
 
 export const initialState: UserState = {
-    data: null,
+    data: [],
     loading: false,
 };
 
@@ -50,6 +50,7 @@ const fetchUsers = createAsyncThunk(
     "user/fetchUsers",
     async () => {
         const response = await api.user.getUser(localStorage.getItem("token") as string);
+        console.log("response", response);
         return response.data;
     }
 );

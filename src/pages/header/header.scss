@@ -159,21 +159,26 @@
     position: absolute;
     top: 2.5rem;
     right: 0;
-    background-color: #d3cba6;
-    width: 150px;
-    height: 120px;
+    background-color: #f5f5f5;
+    width: 210px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1;
-    padding: 0 0.5rem 0.5rem 0.5rem;
+    padding: 0.5rem;
     text-align: start;
     &:hover {
       display: block;
     }
   }
 }
+
 .authenItem {
-  padding-top: 1rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
   &:hover {
     color: red;
+    background-color: #eee;
   }
 }
+

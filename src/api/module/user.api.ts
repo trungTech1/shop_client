@@ -17,7 +17,7 @@ export interface User {
 
 const userApi = {
     getAll: () => axios.get(`${url}${prefix}`),
-    getUser: (token: string) => axios.get(`${url}${prefix}`, {
+    getUser: (token: string) => axios.get(`${url}${prefix}/`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

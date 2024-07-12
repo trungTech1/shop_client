@@ -11,7 +11,7 @@ import { User } from "@/api/module/user.api";
 import { Modal } from "antd";
 import { useState } from "react";
 
-interface ErrorObject {
+export interface ErrorObject {
   message: {
     email?: string;
     fullName?: string;
@@ -92,29 +92,33 @@ const Register = () => {
       })
       .catch((err) => {
         if (err.response) {
+          console.log(err.response.data);
           setError(err.response.data);
         }
       });
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+  
+    // Xử lý error từ API
     if (error) {
-      setError({
-        ...error,
+      setError((prevError) => ({
+        ...prevError,
         message: {
-          ...error.message,
-          [e.target.name]: undefined,
+          ...prevError?.message,
+          [name]: undefined,
         },
-      });
+      }));
     }
-    if (validationErrors.message) {
-      setValidationErrors({
-        ...validationErrors,
-        message: {
-          ...validationErrors.message,
-          [e.target.name]: undefined,
-        },
-      });
-    }
+  
+    // Xử lý validationErrors
+    setValidationErrors((prevErrors) => ({
+      ...prevErrors,
+      message: {
+        ...prevErrors.message,
+        [name]: undefined,
+      },
+    }));
   };
 
   return (
@@ -151,7 +155,6 @@ const Register = () => {
               style: { color: "black" },
             }}
             onChange={handleChange}
-            // style={{ marginBottom: "20px" }}
           />
           {(validationErrors.message.fullName || error?.message?.fullName) && (
             <p className="error-message">
@@ -200,7 +203,6 @@ const Register = () => {
         </div>
         <div className="input-container">
           <TextField
-            inputProps={{ minLength: 6 }}
             id="password"
             name="password"
             label={t("password")}
