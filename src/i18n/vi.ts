@@ -130,5 +130,6 @@ export default {
         myOrder: "Đơn hàng của tôi",
         logOut: "Đăng xuất",
         member: "Hội viên",
+        unitPrice: "Đơn giá",
     }
 }

@@ -7,6 +7,7 @@ import { useState } from "react";
 import api from "@/api";
 import { Modal } from "antd";
 // import { authenActions } from "../../store/slices/authen.slice";
+
 interface error {
   message: {
     username: string;
@@ -123,7 +124,6 @@ const Login = () => {
             <p className="error-message">{error?.message?.password}</p>
           )}
         </div>
-
         <button className="btnLogIn" type="submit">
           {t("login1")}
         </button>

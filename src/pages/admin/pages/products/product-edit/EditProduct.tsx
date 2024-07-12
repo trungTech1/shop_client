@@ -5,12 +5,11 @@ import { useTranslation } from "react-i18next";
 import api from "@/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { fireBaseFn } from "@/firebase/firebase";
+import { fireBaseFn } from "@firebaseService/firebase";
 import { Modal } from "antd";
 
 interface Product {
   product_id: number;
-  sku: string;
   product_name: string;
   imageUrls: string[];
   description: string;
@@ -27,13 +26,12 @@ const EditProduct: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const { productId } = useParams<{ productId: string }>();
   const categories = useSelector(
-    (state: RootState) => state.category.categories
+    (state: RootState) => state.category.data
   );
-  console.log();
+  console.log(categories);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      // Fetch product details by ID
       const data = await api.product.getProductById(Number(productId));
       const productData = data.data;
       setProduct(productData);
@@ -126,24 +124,19 @@ const EditProduct: React.FC = () => {
             <input type="text" id="id" value={product.product_id} readOnly />
           </div>
           <div className="form-group">
-            <label htmlFor="sku">{t("sku")}</label>
-            <input type="text" id="sku" value={product.sku} readOnly />
-          </div>
-          <div className="form-group">
             <label htmlFor="name">{t("name")}</label>
             <input
               type="text"
               id="name"
               value={product.product_name}
               onChange={handleNameChange}
-              required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="image">{t("image")}</label>
+            <label htmlFor="imageUrls">{t("image")}</label>
             <input
               type="file"
-              id="image"
+              id="imageUrls"
               accept="image/*"
               onChange={handleImageChange}
               multiple
@@ -198,9 +191,9 @@ const EditProduct: React.FC = () => {
               <option value="" disabled>
                 {t("selectacategory")}
               </option>
-              {categories.map((category) => (
-                <option key={category.category_id} value={category.category_id}>
-                  {category.category_name}
+              {categories?.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
                 </option>
               ))}
             </select>
