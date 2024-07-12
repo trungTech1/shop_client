@@ -14,7 +14,7 @@ const RouterSetup = () =>  {
           <Route path='/productDetail' element={lazyFnDelay(() => import('@pages/product-detail/ProductDetail'))}></Route>
         </Route>
         <Route path='/register' element={lazyFnDelay(() => import('@pages/authen/Register'))}></Route>
-        <Route path='/login' element={lazyFnDelay(() => import('@pages/authen/LogIn'))}></Route>
+        <Route path='/login' element={lazyFnDelay(() => import('@pages/authen/LogIn'),{enable: localStorage.getItem("token") == null, fallBackUrl: "/"})}></Route>
         <Route path='*' element={lazyFnDelay(() => import('@/pages/not-found/404'))}></Route>
         <Route path='/admin' element={lazyFnDelay(() => import('@pages/admin/index'))}>
         <Route path='category' element={lazyFnDelay(() => import('@pages/admin/pages/categories/CategoryTable'))}></Route>
