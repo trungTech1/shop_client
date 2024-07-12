@@ -5,20 +5,26 @@ import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import SearchIcon from "@mui/icons-material/Search";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-// import { productAction } from "../../store/slices/product.slice";
 import "./header.scss";
 import { Snowfall } from "react-snowfall";
 import { useTranslation } from "react-i18next";
 import ChangeLanguage from "@/i18n/ChangeLanguage";
-// import { UserDataAction } from "../../store/slices/user.slice";
+import { RootState } from "@/store";
+import { userActions } from "@/store/slices/user.slice";
+
 const Header = (props: any) => {
   const {t} = useTranslation();
- 
+  const dispatch = useDispatch();
+ const userStore = useSelector((state: RootState) => state.user);
+
+ console.log("userStore", userStore.data)
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(userActions.fetchUsers() as any);
+  };
 
   return (
     <header>
@@ -55,22 +61,19 @@ const Header = (props: any) => {
               <span>{t("cart")}</span> <span>{999}</span>
             </Link>
             <div className="header-above-right-authen">
-              {false ? (
+              {userStore.data? (
                 <div className="authenContainer">
-                  <div className="authenInfo">
-                    {t("hello")}, <br />
-                    {
-                     "Anh Trung Lớn"
-                    }
-                  </div>
-                  <div className="dropDownAuthen">
-                    <div className="authenItem">{t("userProfile")}</div>
-                    <div className="authenItem">{t("myOrder")}</div>
-                    <div className="authenItem" >
-                      {t("logOut")}
-                    </div>
-                  </div>
+                <div className="authenInfo">
+                  {t("hello")}, <br />
+                  {userStore.data.fullName}
                 </div>
+                <div className="dropDownAuthen">
+                  <div className="authenItem">{t("userProfile")}</div>
+                  <div className="authenItem">{t("myOrder")}</div>
+                  <div className="authenItem" onClick={handleLogout}>{t("logOut")}</div>
+                </div>
+              </div>
+              
               ) : (
                 <>
                   <Link to="/login" className="header-authen">

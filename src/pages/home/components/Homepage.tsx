@@ -4,14 +4,16 @@ import CountdownTimer from '@/components/time/CountdownTimer'
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 export default function Homepage() {
   const {t} = useTranslation();
-  
+  const userStore = useSelector((state: RootState) => state.user);
   return (
     <div className="home_page_body">
         <Boottrap />
-        <AdComponent onClose={() => {}} />
+        <AdComponent/>
         
         <div className="time_container">
           <div className="timer">

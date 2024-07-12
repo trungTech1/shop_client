@@ -6,35 +6,34 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import api from "@/api";
 import { Modal } from "antd";
-// import { authenActions } from "../../store/slices/authen.slice";
+import { ErrorObject } from "./Register";
+import { User } from "@/api/module/user.api";
+import { userActions } from "@/store/slices/user.slice";
+import { useDispatch } from "react-redux";
 
-interface error {
-  message: {
-    username: string;
-    password: string;
-  };
-}
+
 const Login = () => {
   const { t } = useTranslation();
-  const [error, setError] = useState<error | null>(null);
+  const [error, setError] = useState<ErrorObject | null>(null);
+  const [validationErrors, setValidationErrors] = useState<ErrorObject>({
+    message: {},
+  });
+  const dispatch = useDispatch();
+  const validateForm = (data: User) => {
+    const errors: ErrorObject = { message: {} };
 
-  const validate = (data: any) => {
-    const errors: any = {
-      message: {
-        username: "",
-        password: "",
-      },
-    };
-    if (!data.username) {
-      errors.message.username = "Login Id Không được để trống";
+    if (!data.username.trim()) {
+      errors.message.username = t("username không được để trống");
     } else if (data.username.length < 6) {
-      errors.message.username = "Login Id phải lớn hơn 6 ký tự";
+      errors.message.username = t("username phải có ít nhất 6 ký tự");
     }
-    if (!data.password) {
-      errors.message.password = "Password Không được để trống";
+
+    if (!data.password.trim()) {
+      errors.message.password = t("password không được để trống");
     } else if (data.password.length < 6) {
-      errors.message.password = "Password phải lớn hơn 6 ký tự";
+      errors.message.password = t("password phải có ít nhất 6 ký tự");
     }
+
     return errors;
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,9 +43,10 @@ const Login = () => {
       password: (e.target as any).password.value,
     };
 
-    const errors = validate(data);
-    if (errors.message.loginId || errors.message.password) {
-      setError(errors);
+    const errors = validateForm(data);
+
+    if (Object.keys(errors.message).length > 0) {
+      setValidationErrors(errors);
       return;
     }
     await api.user
@@ -59,17 +59,20 @@ const Login = () => {
             onOk: () => {
               const token = res.data.accessToken;
               localStorage.setItem("token", token);
-              window.location.href = "/";
+            dispatch(userActions.fetchUsers() as any);
+              // window.location.href = "/";
             },
           });
         }
       })
       .catch((err) => {
+        if (err.response.data.message.username || err.response.data.message.password) {
+          setError(err.response.data);
+        }
         Modal.error({
-          title: "Login Fail",
-          content: "Login Fail",
+          title: "Error",
+          content: err.response.data.message,
         });
-        console.log(err);
       });
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,6 +81,15 @@ const Login = () => {
         ...error,
         message: {
           ...error.message,
+          [e.target.name]: undefined,
+        },
+      });
+    }
+    if (validationErrors.message) {
+      setValidationErrors({
+        ...validationErrors,
+        message: {
+          ...validationErrors.message,
           [e.target.name]: undefined,
         },
       });
@@ -102,13 +114,14 @@ const Login = () => {
               style: { color: "black" },
             }}
           />
-          {error?.message.username && (
-            <p className="error-message">{error?.message?.username}</p>
+          {(validationErrors.message.username || error?.message?.username) && (
+            <p className="error-message">
+              {validationErrors.message.username || error?.message?.username}
+            </p>
           )}
         </div>
         <div className="input-container">
           <TextField
-            inputProps={{ minLength: 6 }}
             id="password"
             label={t("password")}
             variant="outlined"
@@ -120,8 +133,10 @@ const Login = () => {
               style: { color: "black" },
             }}
           />
-          {error?.message.password && (
-            <p className="error-message">{error?.message?.password}</p>
+          {(validationErrors.message.password || error?.message?.password) && (
+            <p className="error-message">
+              {validationErrors.message.password || error?.message?.password}
+            </p>
           )}
         </div>
         <button className="btnLogIn" type="submit">
