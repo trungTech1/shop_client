@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function Homepage() {
   const {t} = useTranslation();
+  
   return (
     <div className="home_page_body">
         <Boottrap />
