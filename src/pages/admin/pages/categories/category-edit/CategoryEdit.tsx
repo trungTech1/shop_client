@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fireBaseFn } from "@firebaseService/firebase";
 import { Category, categoryActions } from "@/store/slices/category.slice";
 import { RootState } from "@/store";
+import LoadingSpinner from "@/routes/loadding/Loadding";
 
 
 const EditCategory: React.FC = () => {
@@ -14,6 +15,7 @@ const EditCategory: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [category, setCategory] = useState<Category | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const { categoryId } = useParams();
 const categoryStore = useSelector((state: RootState) => state.category);
@@ -33,11 +35,12 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       image: category?.iconUrl,
       status: category?.status,
     };
-
+    setLoading(true);
     await api.categories.update(category!.id, data).then((res) => {
       if (res.status === 200) {
         dispatch(categoryActions.updateCategory(category!));
-        navigate("-1");
+        setLoading(false);
+        navigate(-1);
       }
     }).catch((error) => {
       console.error("Lỗi khi update category", error);
@@ -67,6 +70,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   return (
     <div className="edit-category">
       <h1 className="title">{t("editCategory")}</h1>
+      {loading && <LoadingSpinner />}
       {category ? (
         <form className="category-form" onSubmit={handleSubmit}>
           <div className="form-group">

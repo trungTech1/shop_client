@@ -22,7 +22,6 @@ const categoryApi = {
     return axios.put(`${url}/${prefix}/${id}`, data);
   },
   delete: (id: number) => {
-    console.log("id", id)
     return axios.delete(`${url}/${prefix}/${id}`);
   },
 };
