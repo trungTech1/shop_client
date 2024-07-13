@@ -17,8 +17,8 @@ interface Product {
   stock_quantity: number;
   categoryId: number;
   status: boolean;
-  created_at: string;
-  updated_at: string;
+  createdDate: string;
+  updatedDate: string;
 }
 
 const EditProduct: React.FC = () => {
@@ -35,7 +35,6 @@ const EditProduct: React.FC = () => {
       const data = await api.product.getProductById(Number(productId));
       const productData = data.data;
       setProduct(productData);
-      console.log("productData", productData)
     };
     fetchProduct();
   }, [productId]);
@@ -62,10 +61,8 @@ const EditProduct: React.FC = () => {
         );
         
         const uploadedUrls = await Promise.all(uploadPromises);
-        
         if (product) {
-          const updatedImages = [...product.imageUrls, ...uploadedUrls];
-          setProduct({ ...product, imageUrls: updatedImages });
+          setProduct({ ...product, imageUrls: [...product.imageUrls, ...uploadedUrls] });
         }
       } catch (error) {
         console.error("Error uploading images", error);
@@ -100,6 +97,7 @@ const EditProduct: React.FC = () => {
     event.preventDefault();
     try {
       (async () => {
+        console.log("product", product);
         await api.product.updateProduct(product as Product);
       }
     )();

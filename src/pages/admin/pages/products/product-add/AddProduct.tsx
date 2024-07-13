@@ -33,7 +33,7 @@ const AddProduct: React.FC = () => {
 
     const newProduct = {
       product_name: (event.target as any).name.value,
-      imageUrls: imageUrls,
+      images: imageUrls,
       unitPrice: (event.target as any).price.value,
       stock_quantity: (event.target as any).stock.value,
       category_id: (event.target as any).category.value,
