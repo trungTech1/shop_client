@@ -3,7 +3,6 @@ import axios from "axios";
 
 
 
-const prefix = '/user';
 const url = import.meta.env.VITE_SEVER_URL;
 export interface User {
     username: string;
@@ -16,16 +15,23 @@ export interface User {
 
 
 const userApi = {
-    getAll: () => axios.get(`${url}${prefix}`),
-    getUser: (token: string) => axios.get(`${url}${prefix}/`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }),
-    create: (data: User) => axios.post(`${url}/auth/register`, data),
-    update: (id: string, data: any) => axios.put(`${url}${prefix}/${id}`, data),
-    delete: (id: string) => axios.delete(`${url}${prefix}/${id}`),
-    userLogin: (data: any) => axios.post(`${url}/auth/login`, data),
+    register: (data: User) => {
+        return axios.post(`${url}/auth/register`, data)
+    },
+    login: (data: any) => {
+        return axios.post(`${url}/auth/login`, data)
+    },
+    authen: () => {
+        return axios.post(`${url}/auth`, {
+
+        })
+    },
+    findAll: () => {
+        return axios.get(`${url}/user/list`)
+    },
+    update: (data: User) => {
+        return axios.put(`${url}/user/update`, data)
+    }
 };
 
 export default userApi;

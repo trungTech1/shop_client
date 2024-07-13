@@ -81,7 +81,7 @@ const Register = () => {
       return;
     }
     await api.user
-      .create(data)
+      .register(data)
       .then((res) => {
         Modal.success({
           content: res.data,
