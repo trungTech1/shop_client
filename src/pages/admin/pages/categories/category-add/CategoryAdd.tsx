@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { categoryActions } from '@/store/slices/category.slice';
 import { Modal } from 'antd';
 import { RootState } from '@/store';
+import LoadingSpinner from '@/routes/loadding/Loadding';
 
 
 const AddCategory = () => {
@@ -15,8 +16,10 @@ const AddCategory = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const userStore = useSelector((state: RootState) => state.user);
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setLoading(true);
     const newCategory = {
       name: (event.target as any).category_name.value,
       iconUrl: await fireBaseFn.uploadToStorage((event.target as any).image.files[0]),
@@ -29,9 +32,11 @@ const AddCategory = () => {
         content: t('addCategorySuccess'),
         onOk: () => {
           dispatch(categoryActions.addCategory(res.data))
+          setLoading(false);
           navigate(-1);
         }
       });
+      
     }).catch(() => {
       alert(t('addCategoryFailed'));
     });
@@ -45,9 +50,12 @@ const AddCategory = () => {
         navigate('/admin');
       }
     }
-  }, [userStore.data, userStore.loading])
+  }, [navigate, userStore.data, userStore.loading])
   return (
     <>
+      {
+        loading && <LoadingSpinner />
+      }
       {
         access && (
           <div className="add-category">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./CategoryTable.scss";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -6,32 +6,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import api from "@/api";
 import { Modal } from "antd";
-import { categoryActions } from "@/store/slices/category.slice";
-
-interface per {
-  read: boolean;
-  create: boolean;
-  update: boolean;
-  delete: boolean;
-}
+import { Category, categoryActions } from "@/store/slices/category.slice";
+import usePermissions from "../../usePermissions";
 
 const CategoryTable: React.FC = () => {
-  const [per, setPer] = useState<per>({
-    read: false,
-    create: false,
-    update: false,
-    delete: false,
-  });
   const { t } = useTranslation();
-  const categoryStore = useSelector((state: RootState) => state.category);
   const userStore = useSelector((state: RootState) => state.user);
+  const per = usePermissions(userStore);
   const dispatch = useDispatch();
+  const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-
-
 
   const handleDelete = async (id: number) => {
     try {
@@ -39,28 +26,43 @@ const CategoryTable: React.FC = () => {
       Modal.success({
         content: t("deleteCategorySuccess"),
         onOk: () => {
-          dispatch(categoryActions.deleteCategory(id));
           dispatch(categoryActions.fecthCategories(
             {
               page: currentPage,
               pageSize: pageSize
             }
           ) as any);
+          setCategories(categories.filter((category) => category.id !== id));
         },
       });
     } catch (error) {
       console.log(error);
     }
   };
-  const loadCategories = async () => {
-    const data = await api.categories.getCategories(
-      currentPage,
-      pageSize,
-      searchTerm
-    );
-    dispatch(categoryActions.addCategory(data.data));
-    setTotalPages(data.data.totalPages);
-  };
+  const loadCategories = useCallback(async () => {
+    try {
+      await api.categories.getCategories(
+        currentPage,
+        pageSize,
+        searchTerm
+      ).then((res) => {
+        dispatch(categoryActions.setData(res.data.content));
+        setCategories(res.data.content);
+        setTotalPages(res.data.totalPages);
+      }
+      ).catch((error) => {
+        console.error("Error loading categories:", error);
+      }
+      );
+      
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    }
+  }, [currentPage, pageSize, searchTerm, dispatch]);
+  
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   const getPageNumbers = () => {
     const pageNumbers = [];
@@ -74,29 +76,6 @@ const CategoryTable: React.FC = () => {
     setCurrentPage(0);
     loadCategories();
   };
-
-  useEffect(() => {
-    if (!userStore.loading) {
-      let perClone = {
-        ...per
-      }
-      if (userStore.data?.permission?.includes("category.r")) {
-        perClone.read = true;
-      }else {
-        window.location.href = "/admin";
-      }
-      if (userStore.data?.permission?.includes("category.c")) {
-        perClone.create = true;
-      }
-      if (userStore.data?.permission?.includes("category.u")) {
-        perClone.update = true;
-      }
-      if (userStore.data?.permission?.includes("category.d")) {
-        perClone.delete = true;
-      }
-      setPer(perClone);
-    }
-  }, [userStore.data, userStore.loading])
   return (
    <>
    {
@@ -147,8 +126,7 @@ const CategoryTable: React.FC = () => {
           </thead>
           <tbody>
             {
-              Array.isArray(categoryStore.data) && categoryStore.data.length > 0 ? (
-                categoryStore.data?.map((category, index) => (
+              categories?.map((category, index) => (
                   <tr key={category.id}>
                     <td>{index + 1}</td>
                     <td>{category.name}</td>
@@ -174,11 +152,6 @@ const CategoryTable: React.FC = () => {
                     </td>
                   </tr>
                 ))
-              ) : (
-                <tr>
-                  <td colSpan={10}>{t("noData")}</td>
-                </tr>
-              )
             }
 
           </tbody>
@@ -230,3 +203,4 @@ const CategoryTable: React.FC = () => {
 };
 
 export default CategoryTable;
+
