@@ -16,14 +16,14 @@ const categoryApi = {
     return await axios.get(getUrl);
   },
   add: (data: any) => {
-    return axios.post(`${url}/categories`, data);
+    return axios.post(`${url}/${prefix}`, data);
   },
   update: (id: number, data: any) => {
-    return axios.put(`${url}/categories/${id}`, data);
+    return axios.put(`${url}/${prefix}/${id}`, data);
   },
   delete: (id: number) => {
     console.log("id", id)
-    return axios.delete(`${url}/categories/${id}`);
+    return axios.delete(`${url}/${prefix}/${id}`);
   },
 };
 

@@ -1,44 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import './addProduct.scss';
 import { useTranslation } from 'react-i18next';
-import { Category } from '@/store/slices/category.slide';
+import { Category } from '@store/slices/category.slice';
 import { RootState } from '@/store';
-import {  useSelector } from 'react-redux';
-import { fireBaseFn } from '@/firebase/firebase';
+import { useSelector } from 'react-redux';
+import { fireBaseFn } from '@firebaseService/firebase';
 import api from '@/api';
 import { Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 
 const AddProduct: React.FC = () => {
-const {t} = useTranslation();
-const navigate = useNavigate();
-const [categories, setCategories] = useState<Category[]>([]);
-const category = useSelector((state: RootState) => state.category);
-useEffect(() => {
-  if (category.categories) {
-    setCategories(category.categories);
-  }
-}, [category]);
+  const { t } = useTranslation();
+
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const category = useSelector((state: RootState) => state.category);
+  useEffect(() => {
+    if (category.data) {
+      setCategories(category.data);
+    }
+  }, [category]);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const images = (event.target as any).image.files;
     const imageUrls: string[] = [];
     for (let i = 0; i < images.length; i++) {
-     await fireBaseFn.uploadToStorage(images[i]).then((url) => {
+      await fireBaseFn.uploadToStorage(images[i]).then((url) => {
         imageUrls.push(url);
       });
     }
-  
+
     const newProduct = {
       product_name: (event.target as any).name.value,
-      images: imageUrls,
+      imageUrls: imageUrls,
       unitPrice: (event.target as any).price.value,
       stock_quantity: (event.target as any).stock.value,
       category_id: (event.target as any).category.value,
       description: (event.target as any).description.value,
     };
-    console.log("product",newProduct)
+    console.log("product", newProduct)
     await api.product.addProduct(newProduct).then(() => {
       Modal.success({
         content: t('addProductSuccess'),
@@ -79,7 +80,7 @@ useEffect(() => {
           <input
             type="number"
             id="price"
-            name='price'    
+            name='price'
             required
           />
         </div>
@@ -97,8 +98,8 @@ useEffect(() => {
           <select id="category" required>
             <option value="" >{t("selectacategory")}</option>
             {categories?.map((category) => (
-              <option key={category.category_id} value={category.category_id}>
-                {category.category_name}
+              <option key={category.id} value={category.id}>
+                {category.name}
               </option>
             ))}
           </select>
@@ -107,7 +108,7 @@ useEffect(() => {
           <label htmlFor="description">{t("description")}</label>
           <input
             id="description"
-            type = 'text'
+            type='text'
             name='description'
             required
           />

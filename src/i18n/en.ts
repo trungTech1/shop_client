@@ -130,5 +130,6 @@ export default {
         myOrder: "My Order",
         logOut: "Log Out",
         member: "Member",
+        unitPrice: "Unit Price",
     }   
 }

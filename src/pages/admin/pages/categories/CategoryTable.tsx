@@ -12,6 +12,7 @@ import { categoryActions } from "@/store/slices/category.slice";
 const CategoryTable: React.FC = () => {
   const { t } = useTranslation();
   const categoryStore = useSelector ((state: RootState) => state.category);
+  console.log(categoryStore,"hhhhgghh")
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
@@ -79,7 +80,7 @@ const CategoryTable: React.FC = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    e.preventDefault(); // Ngăn chặn hành vi mặc định của phím Enter
+                    e.preventDefault();
                     handleSearch();
                   }
                 }

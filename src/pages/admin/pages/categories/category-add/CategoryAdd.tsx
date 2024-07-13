@@ -35,8 +35,6 @@ const AddCategory = () => {
     });
   };
 
-
-
   return (
     <div className="add-category">
       <button onClick={() => {

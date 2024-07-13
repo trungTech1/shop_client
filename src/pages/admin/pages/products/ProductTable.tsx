@@ -6,7 +6,6 @@ import api from "@/api";
 import { Modal } from "antd";
 interface product {
   product_id: number;
-  sku: string;
   product_name: string;
   imageUrls: string[];
   unitPrice: number;
@@ -75,7 +74,7 @@ const ProductTable: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  e.preventDefault(); // Ngăn chặn hành vi mặc định của phím Enter
+                  e.preventDefault();
                   handleSearch();
                 }
               }}
@@ -90,10 +89,9 @@ const ProductTable: React.FC = () => {
         <thead>
           <tr>
             <th>{t("id")}</th>
-            <td>{t("sku")}</td>
             <th>{t("name")}</th>
             <th>{t("image")}</th>
-            <th>{t("price")}</th>
+            <th>{t("unitPrice")}</th>
             <th>{t("stock")}</th>
             <th>{t("categoryId")}</th>
             <th>{t("createdAt")}</th>
@@ -106,7 +104,6 @@ const ProductTable: React.FC = () => {
             products?.map((product, index) => (
               <tr key={product.product_id}>
                 <td>{index + 1 + pageSize * currentPage}</td>
-                <td>{product.sku}</td>
                 <td>{product.product_name}</td>
                 <td>
                   <img

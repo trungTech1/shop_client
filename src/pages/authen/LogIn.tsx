@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const {t} = useTranslation();
+  
   const dispatch = useDispatch();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
@@ -99,9 +100,9 @@ const Login = () => {
           InputLabelProps={{
             style: { color: "black" },
           }}
-          inputProps={{
-            minLength: 6,
-          }}
+          // inputProps={{
+          //   minLength: 6,
+          // }}
         />
         <p className="error">{passwordError}</p>
         <button className="btnLogIn" type="submit">
