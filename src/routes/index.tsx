@@ -22,7 +22,7 @@ const RouterSetup = () =>  {
         <Route path='product' element={lazyFnDelay(() => import('@pages/admin/pages/products/ProductTable'))}></Route>
         <Route path='product/add' element={lazyFnDelay(() => import('@pages/admin/pages/products/product-add/AddProduct'))}></Route>
         <Route path='product/edit/:productId' element={lazyFnDelay(() => import('@pages/admin/pages/products/product-edit/EditProduct'))}></Route>
-
+        <Route path='user' element={lazyFnDelay(() => import('@pages/admin/pages/users/UserTable'))}></Route>
         </Route>
       </Routes>
     </BrowserRouter>
