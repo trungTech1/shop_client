@@ -50,17 +50,17 @@ const Login = () => {
       return;
     }
     await api.user
-      .userLogin(data)
+      .login(data)
       .then((res) => {
         if (res.status === 200) {
           Modal.success({
             title: "Login Success",
             content: "Login Success",
             onOk: () => {
-              const token = res.data.accessToken;
+              const token = res.data;
               localStorage.setItem("token", token);
             dispatch(userActions.fetchUsers() as any);
-              // window.location.href = "/";
+              window.location.href = "/";
             },
           });
         }
