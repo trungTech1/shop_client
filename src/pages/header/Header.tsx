@@ -38,7 +38,7 @@ const Header = (props: any) => {
                 alt=""
               />
             </Link>
-            <div className="header-above-search">
+            {/* <div className="header-above-search">
               <button>
                 <SearchIcon className="header-above-search-icon" />
               </button>
@@ -47,7 +47,7 @@ const Header = (props: any) => {
                 placeholder={t("placeholderSearch")}
                 // onKeyDown={handleSearch}
               />
-            </div>
+            </div> */}
           </div>
           <div className="header-above-right">
             <div className="header-above-right-address">

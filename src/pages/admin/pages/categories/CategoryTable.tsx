@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./CategoryTable.scss";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -19,6 +19,8 @@ const CategoryTable: React.FC = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
+  
+
   const handleDelete = async (id: number) => {
     try {
       await api.categories.delete(id);
@@ -26,6 +28,12 @@ const CategoryTable: React.FC = () => {
         content: t("deleteCategorySuccess"),
         onOk: () => {
           dispatch(categoryActions.deleteCategory(id));
+          dispatch(categoryActions.fecthCategories( 
+            {
+              page: currentPage,
+              pageSize: pageSize
+            }
+          ) as any);
         },
       });
     } catch (error) {
@@ -41,14 +49,6 @@ const CategoryTable: React.FC = () => {
     dispatch(categoryActions.addCategory(data.data));
     setTotalPages(data.data.totalPages);
   };
-  useEffect(() => {
-    const loadCategories = async () => {
-      const data = await api.categories.getCategories(currentPage, pageSize);
-      dispatch(categoryActions.addCategory(data.data.content));
-      setTotalPages(data.data.totalPages);
-    };
-    loadCategories();
-  }, [currentPage, pageSize, dispatch]);
 
   const getPageNumbers = () => {
     const pageNumbers = [];
