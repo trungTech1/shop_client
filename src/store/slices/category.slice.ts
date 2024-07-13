@@ -10,18 +10,13 @@ export interface Category {
 
 interface CategoryState {
   data: Category[];
-  totalPages: number;
-  currentPage: number;
-  pageSize: number;
+
   loading: boolean;
   error: string | null;
 }
 
 const initialState: CategoryState = {
   data: [],
-  totalPages: 0,
-  currentPage: 0,
-  pageSize: 5,
   loading: true,
   error: null,
 };
@@ -32,7 +27,7 @@ const categorySlice = createSlice({
   initialState,
   reducers: {
     setData: (state, action) => {
-      state.data = action.payload.content;
+      state.data = action.payload;
       },
       updateCategory: (state, action) => {
         const index = state.data.findIndex(cat => cat.id === action.payload.id);
@@ -49,10 +44,9 @@ const categorySlice = createSlice({
     
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchCategories.fulfilled, (state, action) => {
+
+    builder.addCase( fecthCategories.fulfilled, (state, action) => {
       state.data = action.payload.content;
-      state.totalPages = action.payload.page.totalPages;
-      state.currentPage = action.payload.page;
       state.loading = false;
     });
   },
@@ -62,7 +56,6 @@ const fetchCategories  = createAsyncThunk(
   "category/fetchData",
   async ({ page, pageSize }: { page: number, pageSize: number }) => {
     const response = await api.categories.getCategories(page, pageSize);
-    console.log("responseưeqweqwe", response.data);
     return response.data;
   }
 );
