@@ -13,8 +13,8 @@ interface product {
   stock_quantity: number;
   category_id: number;
   status: boolean;
-  created_at: string;
-  updatedAt: string;
+  createdDate: string;
+  updatedDate: string;
 }
 const ProductTable: React.FC = () => {
   const { t } = useTranslation();
@@ -26,10 +26,8 @@ const ProductTable: React.FC = () => {
   useEffect(() => {
     const loadProducts = async () => {
       const data = await api.product.getAllproducts(currentPage, pageSize);
-      console.log("data", data.data);
       setProducts(data.data.content);
-      console.log("products", products[0].imageUrls);
-      setTotalPages(data.data.totalPages);
+      setTotalPages(data.data.page.totalPages);
     };
     loadProducts();
   }, [currentPage, pageSize]);
@@ -117,8 +115,8 @@ const ProductTable: React.FC = () => {
                 <td>{product.unitPrice}</td>
                 <td>{product.stock_quantity}</td>
                 <td>{product.category_id}</td>
-                <td>{product.created_at}</td>
-                <td>{product.updatedAt}</td>
+                <td>{product.createdDate}</td>
+                <td>{product.updatedDate}</td>
                 <td>
                   <button className="edit-button">
                     <Link to={`/admin/product/edit/${product.product_id}`}>
