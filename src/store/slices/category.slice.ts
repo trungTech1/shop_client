@@ -44,6 +44,7 @@ const categorySlice = createSlice({
     
   },
   extraReducers: (builder) => {
+
     builder.addCase( fecthCategories.fulfilled, (state, action) => {
       state.data = action.payload.content;
       state.loading = false;
@@ -51,7 +52,7 @@ const categorySlice = createSlice({
   },
 });
 
-const fecthCategories  = createAsyncThunk(
+const fetchCategories  = createAsyncThunk(
   "category/fetchData",
   async ({ page, pageSize }: { page: number, pageSize: number }) => {
     const response = await api.categories.getCategories(page, pageSize);
@@ -61,4 +62,4 @@ const fecthCategories  = createAsyncThunk(
 
 
 export const categoryReducer = categorySlice.reducer;
-export const categoryActions = { ...categorySlice.actions, fecthCategories };
+export const categoryActions = { ...categorySlice.actions, fetchCategories };

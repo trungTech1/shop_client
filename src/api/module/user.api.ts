@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { User } from "@/store/slices/user.slice";
 import axios from "axios";
 
 
 
 const url = import.meta.env.VITE_SEVER_URL;
-export interface User {
-    username: string;
-    fullName: string;
-    email: string;
-    password: string;
-    phone: string;
-    AvatarUrl: string;
+export interface LoginData {
+    loginId: String;
+    password: String;
 }
 
 

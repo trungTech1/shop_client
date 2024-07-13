@@ -17,6 +17,7 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     let perList = [];
+    console.log('user permissions:', userStore.data?.permission);
     if(userStore.data?.permission?.includes('category')) {
       perList.push({
         name: 'category',
@@ -28,7 +29,7 @@ const Sidebar: React.FC = () => {
       perList.push({
         name: 'product',
         icon: <PetsIcon />,
-        link: 'product',
+        link: '/admin/product',
       })
     }
     if(userStore.data?.permission?.includes('user')) {
