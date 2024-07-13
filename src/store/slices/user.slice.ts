@@ -6,16 +6,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
     name: string;
     email: string;
     avatarUrl: string;
+    permission: string;
 }
 
 
 export interface UserState {
-    data: User[] | null;
+    data: User| null;
     loading: boolean;
 }
 
 export const initialState: UserState = {
-    data: [],
+    data: null,
     loading: false,
 };
 
@@ -24,9 +25,7 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        addUser: (state, action) => {
-            state.data?.push(action.payload);
-        },
+
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUsers.pending, (state) => {

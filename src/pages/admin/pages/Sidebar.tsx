@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '@pages/admin/Admin.scss';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -6,17 +6,59 @@ import PetsIcon from '@mui/icons-material/Pets';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 const Sidebar: React.FC = () => {
   const { t } = useTranslation();
+  const userStore = useSelector((store: RootState) => store.user)
+
+  const [menus, setMenus] = useState<any>([])
+
+  useEffect(() => {
+    let perList = [];
+    if(userStore.data?.permission?.includes('category')) {
+      perList.push({
+        name: 'category',
+        icon: <CategoryIcon />,
+        link: '/admin/category',
+      })
+    }
+    if(userStore.data?.permission?.includes('product')) {
+      perList.push({
+        name: 'product',
+        icon: <PetsIcon />,
+        link: 'product',
+      })
+    }
+    if(userStore.data?.permission?.includes('user')) {
+      perList.push({
+        name: 'user',
+        icon: <SupervisedUserCircleIcon />,
+        link: 'user',
+      })
+    }
+    if(userStore.data?.permission?.includes('order')) {
+      perList.push({
+        name: 'order',
+        icon: <ReceiptLongIcon />,
+        link: 'order',
+      })
+    }
+    setMenus(perList)
+    
+  }, [userStore])
   return (
     <div className="sidebar-admin">
       <h1>{t('admin')}</h1>
       <ul className="sidebar-menu">
-        <li><Link to="/admin/category"><CategoryIcon/> {t("category")}</Link></li>
-        <li><Link to="/admin/product"><PetsIcon/> {t("product")}</Link></li>
-        <li><Link to="/admin/user"><SupervisedUserCircleIcon/> {t("user")}</Link></li>
-        <li><Link to="/admin/order"><ReceiptLongIcon/> {t("order")}</Link></li>
+        {
+          menus.map((menu: any) => (
+            <li key={menu.name}>
+              <Link to={menu.link}>{menu.icon} {t(menu.name)}</Link>
+            </li>
+          ))
+        }
       </ul>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CategoryTable.scss";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -8,18 +8,30 @@ import api from "@/api";
 import { Modal } from "antd";
 import { categoryActions } from "@/store/slices/category.slice";
 
+interface per {
+  read: boolean;
+  create: boolean;
+  update: boolean;
+  delete: boolean;
+}
 
 const CategoryTable: React.FC = () => {
+  const [per, setPer] = useState<per>({
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  });
   const { t } = useTranslation();
-  const categoryStore = useSelector ((state: RootState) => state.category);
-  console.log(categoryStore,"hhhhgghh")
+  const categoryStore = useSelector((state: RootState) => state.category);
+  const userStore = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
-  
+
 
   const handleDelete = async (id: number) => {
     try {
@@ -28,7 +40,7 @@ const CategoryTable: React.FC = () => {
         content: t("deleteCategorySuccess"),
         onOk: () => {
           dispatch(categoryActions.deleteCategory(id));
-          dispatch(categoryActions.fecthCategories( 
+          dispatch(categoryActions.fecthCategories(
             {
               page: currentPage,
               pageSize: pageSize
@@ -62,30 +74,60 @@ const CategoryTable: React.FC = () => {
     setCurrentPage(0);
     loadCategories();
   };
+
+  useEffect(() => {
+    if (!userStore.loading) {
+      let perClone = {
+        ...per
+      }
+      if (userStore.data?.permission?.includes("category.r")) {
+        perClone.read = true;
+      }else {
+        window.location.href = "/admin";
+      }
+      if (userStore.data?.permission?.includes("category.c")) {
+        perClone.create = true;
+      }
+      if (userStore.data?.permission?.includes("category.u")) {
+        perClone.update = true;
+      }
+      if (userStore.data?.permission?.includes("category.d")) {
+        perClone.delete = true;
+      }
+      setPer(perClone);
+    }
+  }, [userStore.data, userStore.loading])
   return (
-    <div className="category-table-container">
+   <>
+   {
+    per.read && (
+      <div className="category-table-container">
       <div className="header">
         <h1>{t("categoryTable")}</h1>
         <div className="actions">
-          <button className="add-button">
-            <Link className="link-add-category" to="add">
-              {t("addNewCategory")}
-            </Link>
-          </button>
+          {
+            per.create && (
+              <button className="add-button">
+                <Link className="link-add-category" to="add">
+                  {t("addNewCategory")}
+                </Link>
+              </button>
+            )
+          }
           <div className="search-box">
-              <input
-                type="text"
-                placeholder={t("placeholderSearchCategory")}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleSearch();
-                  }
+            <input
+              type="text"
+              placeholder={t("placeholderSearchCategory")}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSearch();
                 }
-                }
-              />
+              }
+              }
+            />
             <button className="search-button" onClick={handleSearch}>
               {t("search")}
             </button>
@@ -93,49 +135,54 @@ const CategoryTable: React.FC = () => {
         </div>
       </div>
       <div className="table-wrapper">
-      <table className="category-table">
-        <thead>
-          <tr>
-            <th>{t("id")}</th>
-            <th>{t("name")}</th>
-            <th>{t("image")}</th>
-            <th>{t("status")}</th>
-            <th colSpan={2}>{t("action")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            Array.isArray(categoryStore.data) && categoryStore.data.length > 0 ?(
-              categoryStore.data?.map((category,index) => (
-                <tr key={category.id}>
-                  <td>{index + 1}</td>
-                  <td>{category.name}</td>
-                  <td>
-                    <img src={category.iconUrl} alt={category.name} />
-                  </td>
-                  <td>{category.status ? "Active" : "NoAcative"}</td>
-                  <td>
-                    <Link to={`edit/${category.id}`}>{t("edit")}</Link>
-                  </td>
-                  <td>
-                    <button
-                    onClick={() => {
-                      handleDelete(category.id);
-                    }  
-              }
-                    >{t("delete")}</button>
-                  </td>
+        <table className="category-table">
+          <thead>
+            <tr>
+              <th>{t("id")}</th>
+              <th>{t("name")}</th>
+              <th>{t("image")}</th>
+              <th>{t("status")}</th>
+              <th colSpan={2}>{t("action")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              Array.isArray(categoryStore.data) && categoryStore.data.length > 0 ? (
+                categoryStore.data?.map((category, index) => (
+                  <tr key={category.id}>
+                    <td>{index + 1}</td>
+                    <td>{category.name}</td>
+                    <td>
+                      <img src={category.iconUrl} alt={category.name} />
+                    </td>
+                    <td>{category.status ? "Active" : "NoAcative"}</td>
+                    <td>
+                      <Link to={`edit/${category.id}`}>{t("edit")}</Link>
+                    </td>
+                    <td>
+                      {
+                        per.delete && (
+                          <button
+                            onClick={() => {
+                              handleDelete(category.id);
+                            }
+                            }
+                          >{t("delete")}</button>
+                        )
+                      }
+
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={10}>{t("noData")}</td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={10}>{t("noData")}</td>
-              </tr>
-            )
-          }
-         
-        </tbody>
-      </table>
+              )
+            }
+
+          </tbody>
+        </table>
       </div>
       <div className="pagination">
         <button
@@ -147,9 +194,8 @@ const CategoryTable: React.FC = () => {
         {getPageNumbers().map((number) => (
           <button
             key={number}
-            className={`pagination-button ${
-              currentPage === number - 1 ? "active" : ""
-            }`}
+            className={`pagination-button ${currentPage === number - 1 ? "active" : ""
+              }`}
             onClick={() => setCurrentPage(number - 1)}
           >
             {number}
@@ -177,6 +223,9 @@ const CategoryTable: React.FC = () => {
         </select>
       </div>
     </div>
+    )
+   }
+   </>
   );
 };
 

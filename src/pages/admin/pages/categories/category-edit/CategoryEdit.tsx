@@ -15,18 +15,17 @@ const EditCategory: React.FC = () => {
   const dispatch = useDispatch();
   const [category, setCategory] = useState<Category | null>(null);
 
-  const { id } = useParams();
+  const { categoryId } = useParams();
 const categoryStore = useSelector((state: RootState) => state.category);
-  
+console.log("categoryStore", categoryStore, "asdas", Number(categoryId));
  useEffect(() => {
-    const category = categoryStore.data.find((cat) => cat.id === Number(id));
-    console.log("object", category);
+    const category = categoryStore.data.find((cat) => cat.id === Number(categoryId));
+    console.log("category", category);
     if (category) {
       console.log("category1", category);
       setCategory(category);
     }
-  }
-  , [id, categoryStore.data]);
+  }, [categoryId, categoryStore.data]);
 const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = {
