@@ -1,64 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./editCategory.scss";
 import { useTranslation } from "react-i18next";
 import api from "@/api";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { Modal } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import { fireBaseFn } from "@firebaseService/firebase";
 import { Category, categoryActions } from "@/store/slices/category.slice";
+import { RootState } from "@/store";
+
 
 const EditCategory: React.FC = () => {
-  const [category, setCategory] = useState<Category | null>(null);
-  const { categoryId } = useParams<{ categoryId: string }>();
   const { t } = useTranslation();
-  const categoryStore = useSelector((state: RootState) => state.category.data);
-  const navigator = useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [category, setCategory] = useState<Category | null>(null);
 
-  useEffect(() => {
-    const foundCategory = categoryStore?.find(
-      (category) => category.id === Number(categoryId)
-    );
-    setCategory(foundCategory || null);
-  }, [categoryStore, categoryId]);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const { id } = useParams();
+const categoryStore = useSelector((state: RootState) => state.category);
+  
+ useEffect(() => {
+    const category = categoryStore.data.find((cat) => cat.id === Number(id));
+    console.log("object", category);
+    if (category) {
+      console.log("category1", category);
+      setCategory(category);
+    }
+  }
+  , [id, categoryStore.data]);
+const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!category) return;
+    const data = {
+      name: category?.name,
+      image: category?.iconUrl,
+      status: category?.status,
+    };
 
-   const newcategory = { 
-      category_id: category.id,
-      category_name: category.name,
-      image: category.iconUrl,
-      status: category.status,
-   };
-    api.categories.update(newcategory.category_id,newcategory).then((res) => {
-      Modal.success({
-        title: "Cập nhật thành công",
-        content: res.data.message,
-      });
-      const updatedCategory: Category = {
-        id: newcategory.category_id,
-        name: newcategory.category_name,
-        iconUrl: newcategory.image,
-        status: newcategory.status,
-      };
-      categoryActions.updateCategory(updatedCategory);
-      navigator(-1);
-    }).catch(() => {
-      Modal.error({
-        title: "Cập nhật thất bại",
-        content: "Có lỗi xảy ra khi cập nhật danh mục",
-      });
-    });
-  };
+    await api.categories.update(category!.id, data).then((res) => {
+      if (res.status === 200) {
+        dispatch(categoryActions.updateCategory(category!));
+        navigate("-1");
+      }
+    }).catch((error) => {
+      console.error("Lỗi khi update category", error);
+    }
+  );
+
+  }
 
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       try {
         const url = await fireBaseFn.uploadToStorage(file);
+        console.log("url", url);
         if (url) {
           setCategory((prevCategory) => ({
             ...prevCategory!,
