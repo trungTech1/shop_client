@@ -18,6 +18,7 @@ const Header = (props: any) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
  const userStore = useSelector((state: RootState) => state.user);
+  const token = localStorage.getItem("token");
 
  console.log("userStore", userStore.data)
 
@@ -38,7 +39,7 @@ const Header = (props: any) => {
                 alt=""
               />
             </Link>
-            {/* <div className="header-above-search">
+            <div className="header-above-search">
               <button>
                 <SearchIcon className="header-above-search-icon" />
               </button>
@@ -47,7 +48,7 @@ const Header = (props: any) => {
                 placeholder={t("placeholderSearch")}
                 // onKeyDown={handleSearch}
               />
-            </div> */}
+            </div>
           </div>
           <div className="header-above-right">
             <div className="header-above-right-address">
@@ -61,11 +62,11 @@ const Header = (props: any) => {
               <span>{t("cart")}</span> <span>{999}</span>
             </Link>
             <div className="header-above-right-authen">
-              {userStore.data? (
+              {token? (
                 <div className="authenContainer">
                 <div className="authenInfo">
                   {t("hello")}, <br />
-                  {userStore.data.fullName}
+                  {userStore.data?.fullName}
                 </div>
                 <div className="dropDownAuthen">
                   <div className="authenItem">{t("userProfile")}</div>

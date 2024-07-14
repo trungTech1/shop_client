@@ -13,7 +13,7 @@ export default function Homepage() {
   return (
     <div className="home_page_body">
         <Boottrap />
-        <AdComponent/>
+        {/* <AdComponent/> */}
         
         <div className="time_container">
           <div className="timer">

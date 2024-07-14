@@ -1,12 +1,29 @@
 import api from "@/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+export enum Role {
+    ADMIN = "ROLE_ADMIN",
+    MOD = "ROLE_MODERATOR",
+    USER = "ROLE_USER"
+
+}
+
  export interface User {
     id: number;
-    name: string;
+    username: string;
+    password: string;
+    fullName: string;
     email: string;
+    phone: string;
     avatarUrl: string;
-    permission: string;
+
+    permission?: string;
+    isBlocked?: boolean;
+    isDeleted?: boolean;
+    isVerified?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+    role?: Role;
 }
 
 

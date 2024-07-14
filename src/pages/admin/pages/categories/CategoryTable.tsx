@@ -157,7 +157,9 @@ const CategoryTable: React.FC = () => {
                     </td>
                     <td>{category.status ? "Active" : "NoAcative"}</td>
                     <td>
-                      <Link to={`edit/${category.id}`}>{t("edit")}</Link>
+                      {per.update && (
+                        <Link to={`edit/${category.id}`}>{t("edit")}</Link>
+                        )}
                     </td>
                     <td>
                       {
